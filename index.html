@@ -86,6 +86,19 @@
           <h4>Remove styles</h4>
           <button class="btn btn-outline-primary" @click="printNoStyles">PRINT NO STYLES</button>
         </div>
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>Turn off automatic closing after print</h4>
+          <button class="btn btn-outline-primary" @click="printAutoCloseOff">PRINT AUTO CLOSE OFF</button>
+        </div>
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>Custom window title</h4>
+          <p>For customizing the file name.</p>
+          <button class="btn btn-outline-primary" @click="printCustomWindowTitle">PRINT CUSTOM WINDOW TITLE</button>
+        </div>
+        <div class="col-xs-12 col-md-10 offset-md-1 mb-5">
+          <h4>Callback</h4>
+          <button class="btn btn-outline-primary" @click="printCallback">PRINT CALLBACK</button>
+        </div>
       </div>
     </div>
   </div>
@@ -100,7 +113,7 @@
       styles: [
         'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
         'https://unpkg.com/kidlat-css/css/kidlat.css'
-      ]
+      ],
     };
 
     Vue.use(VueHtmlToPaper, options);
@@ -119,24 +132,26 @@
             styles: [
               'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
               'https://unpkg.com/kidlat-css/css/kidlat.css'
-            ]
+            ],
+            timeout: 1000,
+            autoClose: true,
+            windowTitle: window.document.title, // whatever's the window title of the opener
           },
           localLandScapeOptions: {
             styles: [
               'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
               'https://unpkg.com/kidlat-css/css/kidlat.css',
-              './landscape.css'
+              'public/landscape.css', // must be the path of your public folder
             ]
           }
         }
       },
       methods: {
-        print () {
-          vm.$htmlToPaper('printMe', null, () => {
-            console.warn('done');
-          });
+        async print () {
+          await vm.$htmlToPaper('printMe');
+          console.warn('done');
         },
-        printLandscape () {
+        async printLandscape () {
           const localOptions = {
             styles: [
               'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
@@ -144,19 +159,36 @@
               './landscape.css'
             ]
           };
-          vm.$htmlToPaper('printMe', localOptions, () => {
-            console.warn('done landscape');
-          });
+          await vm.$htmlToPaper('printMe', localOptions);
+          console.warn('done landscape');
         },
-        printNoStyles () {
+        async printNoStyles () {
           const localOptions = {
             styles: []
           };
-          vm.$htmlToPaper('printMe', localOptions, () => {
-            console.warn('done no styles');
+          await vm.$htmlToPaper('printMe', localOptions);
+          console.warn('done no styles');
+        },
+        async printAutoCloseOff () {
+          const localOptions = {
+            autoClose: false,
+          };
+          await vm.$htmlToPaper('printMe', localOptions);
+          console.warn('done');
+        },
+        async printCustomWindowTitle () {
+          const localOptions = {
+            windowTitle: 'This is custom window title',
+          };
+          await vm.$htmlToPaper('printMe', localOptions);
+          console.warn('done');
+        },
+        printCallback () {
+          vm.$htmlToPaper('printMe', null, () => {
+            console.warn('done callback');
           });
-        }
-      }
+        },
+      },
     });
   </script>
 </body>
