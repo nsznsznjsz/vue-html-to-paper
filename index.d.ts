@@ -8,6 +8,8 @@ interface Options {
   specs?: string[]
   styles?: string[]
   replace?: boolean
+  autoClose?: boolean
+  windowTitle?: string
 }
 
 interface HtmlToPaper {
@@ -16,7 +18,7 @@ interface HtmlToPaper {
 
 export const VueHtmlToPaper: PluginFunction<Options>
 
-module "vue/types/vue" {
+declare module "vue/types/vue" {
   interface Vue {
     $htmlToPaper: HtmlToPaper
   }
