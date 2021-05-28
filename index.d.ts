@@ -13,7 +13,10 @@ interface Options {
 }
 
 interface HtmlToPaper {
-  (id: string, localOptions: Options, callback?: () => void): void
+  (id: string, localOptions: Options): Promise<void>
+  (el: HTMLElement, localOptions: Options): Promise<void>
+  (id: string, localOptions: Options, callback: () => void): true
+  (el: HTMLElement, localOptions: Options, callback: () => boolean): true
 }
 
 export const VueHtmlToPaper: PluginFunction<Options>
